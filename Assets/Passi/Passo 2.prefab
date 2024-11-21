@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1330400377533946946
+--- !u!1001 &8192441689169099632
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,8 +10,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
+        type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.11806461
+      value: 300.5411
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
         type: 3}
@@ -21,7 +36,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.43340552
+      value: -166.41852
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
         type: 3}
@@ -57,6 +72,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fb517e9f060a9b947acf6be51b66db21,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8387687503175377102, guid: fb517e9f060a9b947acf6be51b66db21,
         type: 3}

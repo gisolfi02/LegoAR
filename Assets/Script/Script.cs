@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch;
 public class Script : MonoBehaviour
 {
     public List<GameObject> passi = new List<GameObject>(); // Prefab dell'oggetto da posizionare
+    public GameObject shadowPlane; //Prefab del piano utilizzato per l'ombra
     private ARRaycastManager raycastManager;
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
     private bool piazzato = false; 
@@ -17,7 +19,7 @@ public class Script : MonoBehaviour
     private int passo = 0;
 
     private GameObject passoCorrente;
-    private Button avanti;
+    private Button avanti,indietro;
 
     void Start()
     {
@@ -25,9 +27,13 @@ public class Script : MonoBehaviour
         raycastManager = GetComponent<ARRaycastManager>();
         
         
-        avanti = GameObject.FindGameObjectWithTag("Button").GetComponent<Button>();
+        avanti = GameObject.FindGameObjectWithTag("Avanti").GetComponent<Button>();
         avanti.onClick.AddListener(Avanti);
         avanti.gameObject.SetActive(false);
+
+        indietro = GameObject.FindGameObjectWithTag("Indietro").GetComponent<Button>();
+        indietro.onClick.AddListener(Indietro);
+        indietro.gameObject.SetActive(false);
     }
 
     void Update()
@@ -50,10 +56,24 @@ public class Script : MonoBehaviour
                         passoCorrente = Instantiate(passi[passo],pose.position,pose.rotation);
                         passo++; // Incrementa il passo per la prossima istanza di oggetto da posizionare
                         piazzato = true; // Imposta la variabile per evitare ulteriori raycasts
-
+                        Instantiate(shadowPlane, new UnityEngine.Vector3(pose.position.x,pose.position.y,pose.position.z), pose.rotation);
                         avanti.gameObject.SetActive(true);
+                        indietro.gameObject.SetActive(true);
                     }
                 }
+            }
+        }
+        else{
+            if(passo == 0 || passo == 58){
+                avanti.interactable=false;
+            }else{
+                avanti.interactable=true;
+            }
+            if (passo <= 1)
+            {
+                indietro.interactable = false;
+            } else{
+                indietro.interactable = true;
             }
         }
     }
@@ -74,6 +94,25 @@ public class Script : MonoBehaviour
         if (passi[passo+1] !=null){
             // Incrementa il passo e posiziona il nuovo oggetto nella stessa posizione
             passo++;
+            passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
+        }
+    }
+
+    void Indietro(){
+        if (passoCorrente != null)
+        {
+            // Salva la posizione e la rotazione dell'oggetto corrente
+            pose.position = passoCorrente.transform.position;
+            pose.rotation = passoCorrente.transform.rotation;
+
+            // Distruggi l'oggetto corrente
+            Destroy(passoCorrente);
+        }
+
+        // Controlla se esiste un passo precedente
+        if (passi[passo-1] !=null){
+            // Incrementa il passo e posiziona il nuovo oggetto nella stessa posizione
+            passo--;
             passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
         }
     }
