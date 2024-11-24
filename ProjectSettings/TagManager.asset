@@ -4,11 +4,14 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Passo
-  - Testo
-  - Button
   - Avanti
   - Indietro
+  - StartPanel
+  - ConstructionPanel
+  - Start
+  - Testo
+  - Home
+  - LoadingPanel
   layers:
   - Default
   - TransparentFX
