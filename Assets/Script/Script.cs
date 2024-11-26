@@ -26,10 +26,10 @@ public class Script : MonoBehaviour
     private Pose pose; //Posizione del tocco dell'utente
     private int passo = 0;
     private GameObject passoCorrente;
-
+    private int temp;
     //UI
-    private Button avanti,indietro,start,home;
-    private GameObject startPanel, constructionPanel,loadingPanel;
+    private Button avanti,indietro,start,home,annulla, conferma;
+    private GameObject startPanel, constructionPanel,loadingPanel, confermaPanel;
 
     /// <summary>
     /// This function initializes the AR application and sets up the user interface.
@@ -58,6 +58,14 @@ public class Script : MonoBehaviour
         home = GameObject.FindGameObjectWithTag("Home").GetComponent<Button>();
         home.onClick.AddListener(ReturnToHome);
 
+        // Set up the "conferma" button
+        conferma = GameObject.FindGameObjectWithTag("Conferma").GetComponent<Button>();
+        conferma.onClick.AddListener(Conferma);
+
+        // Set up the "annulla" button
+        annulla = GameObject.FindGameObjectWithTag("Annulla").GetComponent<Button>();
+        annulla.onClick.AddListener(Annulla);
+
         // Set up the "StartPanel" game object
         startPanel = GameObject.FindGameObjectWithTag("StartPanel");
         startPanel.SetActive(true);
@@ -69,6 +77,10 @@ public class Script : MonoBehaviour
         // Set up the "LoadingPanel" game object
         loadingPanel = GameObject.FindGameObjectWithTag("LoadingPanel");
         loadingPanel.SetActive(false);
+
+        // Set up the "ConfermaPanel" game object
+        confermaPanel = GameObject.FindGameObjectWithTag("ConfermaPanel");
+        confermaPanel.SetActive(false);
 
         // Disable AR plane detection
         planeManager.enabled = false;
@@ -220,6 +232,30 @@ public class Script : MonoBehaviour
     }
 
     /// <summary>
+    /// This function handles the user's confirmation action.
+    /// It disables the "Home", "Avanti", and "Indietro" buttons,
+    /// stores the current step in a temporary variable, resets the step counter,
+    /// and activates the "ConfermaPanel".
+    /// </summary>
+    void ReturnToHome()
+    {
+        // Disable the "Home", "Avanti", and "Indietro" buttons
+        home.interactable = false;
+        avanti.interactable = false;
+        indietro.interactable = false;
+
+        // Store the current step in a temporary variable
+        temp = passo;
+
+        // Reset the step counter
+        passo = 0;
+
+        // Activate the "ConfermaPanel"
+        confermaPanel.SetActive(true);
+    }
+
+
+    /// <summary>
     /// This function is responsible for returning the user to the home scene.
     /// It sets the target scene name in PlayerPrefs and then loads the loading scene.
     /// </summary>
@@ -227,7 +263,7 @@ public class Script : MonoBehaviour
     /// This function is called when the "Home" button is clicked. It ensures that the user is returned to the home scene
     /// by setting the target scene name in PlayerPrefs and then loading the loading scene.
     /// </remarks>
-    void ReturnToHome()
+    void Conferma()
     {
         // Set the target scene name in PlayerPrefs
         PlayerPrefs.SetString("TargetScene", "SampleScene");
@@ -237,5 +273,29 @@ public class Script : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// This function handles the user's cancellation action.
+    /// It disables the "Home", "Avanti", and "Indietro" buttons,
+    /// restores the step counter to its previous value,
+    /// and deactivates the "ConfermaPanel".
+    /// </summary>
+    void Annulla()
+    {
+        // Enable the "Home", "Avanti", and "Indietro" buttons
+        home.interactable = true;
+        avanti.interactable = true;
+        indietro.interactable = true;
+
+        // Restore the step counter to its previous value
+        passo = temp;
+
+        // Reset the temporary variable
+        temp = 0;
+
+        // Deactivate the "ConfermaPanel"
+        confermaPanel.SetActive(false);
+    }
+
+    
 }
 

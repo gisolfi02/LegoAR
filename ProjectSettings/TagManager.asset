@@ -12,6 +12,9 @@ TagManager:
   - Testo
   - Home
   - LoadingPanel
+  - ConfermaPanel
+  - Annulla
+  - Conferma
   layers:
   - Default
   - TransparentFX
