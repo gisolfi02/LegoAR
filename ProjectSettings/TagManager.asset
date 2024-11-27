@@ -15,6 +15,7 @@ TagManager:
   - ConfermaPanel
   - Annulla
   - Conferma
+  - ProgressBar
   layers:
   - Default
   - TransparentFX

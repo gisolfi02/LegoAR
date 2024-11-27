@@ -30,6 +30,7 @@ public class Script : MonoBehaviour
     //UI
     private Button avanti,indietro,start,home,annulla, conferma;
     private GameObject startPanel, constructionPanel,loadingPanel, confermaPanel;
+    private Slider progressBar;
 
     /// <summary>
     /// This function initializes the AR application and sets up the user interface.
@@ -65,6 +66,11 @@ public class Script : MonoBehaviour
         // Set up the "annulla" button
         annulla = GameObject.FindGameObjectWithTag("Annulla").GetComponent<Button>();
         annulla.onClick.AddListener(Annulla);
+
+        // Set up the "progressBar" slider
+        progressBar = GameObject.FindGameObjectWithTag("ProgressBar").GetComponent<Slider>();
+        progressBar.value = 0f;
+        progressBar.gameObject.SetActive(false);
 
         // Set up the "StartPanel" game object
         startPanel = GameObject.FindGameObjectWithTag("StartPanel");
@@ -114,6 +120,8 @@ public class Script : MonoBehaviour
                         shadowPlane = Instantiate(shadowPlane, new UnityEngine.Vector3(pose.position.x,pose.position.y,pose.position.z), pose.rotation);
                         avanti.gameObject.SetActive(true);
                         indietro.gameObject.SetActive(true);
+                        progressBar.gameObject.SetActive(true);
+                        progressBar.value = (float)1/passi.Count;
                     }
                 }
             }
@@ -158,6 +166,7 @@ public class Script : MonoBehaviour
             // Incrementa il passo e posiziona il nuovo oggetto nella stessa posizione
             passo++;
             passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
+            progressBar.value += (float)1/passi.Count;
         }
     }
 
@@ -187,6 +196,7 @@ public class Script : MonoBehaviour
             // Decrement the step counter and instantiate the previous step object at the same position
             passo--;
             passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
+            progressBar.value -= (float)1/passi.Count;
         }
     }
     
