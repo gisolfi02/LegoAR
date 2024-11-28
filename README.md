@@ -26,6 +26,14 @@ di pezzi richiesti. Inoltre prevede una barra di avanzamento per monitorare i pr
 ---
 
 ## ⚠️ **Compatibilità**
-L'app attualmente supporta **esclusivamente** il set LEGO® **31140**, noto come *Unicorno Magico*. Assicurati di avere questo set prima di iniziare ad usarla.
+L'app attualmente supporta **esclusivamente** il set LEGO® **31140** [*Unicorno Magico*](https://www.lego.com/it-it/product/magical-unicorn-31140). Assicurati di avere questo set prima di iniziare ad usarla.
+
+---
+
+> **Disclaimer:**  
+> Questo progetto non è affiliato, sponsorizzato o approvato ufficialmente da LEGO®.  
+> LEGO® è un marchio registrato di proprietà del Gruppo LEGO.  
+> **LegoAR** è un progetto indipendente creato per migliorare l'esperienza di montaggio dei set LEGO®.  
+> Tutti i diritti sui marchi e sui nomi sono di proprietà dei rispettivi titolari.
 
 ---
