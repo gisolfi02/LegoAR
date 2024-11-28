@@ -8,7 +8,6 @@ TagManager:
   - Indietro
   - StartPanel
   - ConstructionPanel
-  - Start
   - Testo
   - Home
   - LoadingPanel
@@ -16,6 +15,10 @@ TagManager:
   - Annulla
   - Conferma
   - ProgressBar
+  - Unicorno
+  - Cavalluccio
+  - Anatra
+  - Info
   layers:
   - Default
   - TransparentFX

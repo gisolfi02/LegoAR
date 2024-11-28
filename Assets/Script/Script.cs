@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,14 +23,14 @@ public class Script : MonoBehaviour
     private ARPlaneManager planeManager;
     
     //Costruzione
-    public List<GameObject> passi = new List<GameObject>(); // Prefab dell'oggetto da posizionare
+    private List<GameObject> passi = new List<GameObject>(); // Prefab dell'oggetto da posizionare
     private bool piazzato = false; 
     private Pose pose; //Posizione del tocco dell'utente
     private int passo = 0;
     private GameObject passoCorrente;
     private int temp;
     //UI
-    private Button avanti,indietro,start,home,annulla, conferma;
+    private Button avanti,indietro,unicorno,cavalluccio,anatra,home,annulla, conferma;
     private GameObject startPanel, constructionPanel,loadingPanel, confermaPanel;
     private Slider progressBar;
 
@@ -51,9 +53,17 @@ public class Script : MonoBehaviour
         indietro.onClick.AddListener(Indietro);
         indietro.gameObject.SetActive(false);
 
-        // Set up the "Start" button
-        start = GameObject.FindGameObjectWithTag("Start").GetComponent<Button>();
-        start.onClick.AddListener(StartDetection);
+        // Set up the "Unicorno" button
+        unicorno = GameObject.FindGameObjectWithTag("Unicorno").GetComponent<Button>();
+        unicorno.onClick.AddListener(Unicorno);
+
+        // Set up the "Cavalluccio" button
+        cavalluccio = GameObject.FindGameObjectWithTag("Cavalluccio").GetComponent<Button>();
+        cavalluccio.onClick.AddListener(Cavalluccio);
+
+        // Set up the "Anatra" button
+        anatra = GameObject.FindGameObjectWithTag("Anatra").GetComponent<Button>();
+        anatra.onClick.AddListener(Anatra);
 
         // Set up the "Home" button
         home = GameObject.FindGameObjectWithTag("Home").GetComponent<Button>();
@@ -127,7 +137,7 @@ public class Script : MonoBehaviour
             }
         }
         else{
-            if(passo == 0 || passo == 58){
+            if(passo == 0 || passo == passi.Count - 1){
                 avanti.interactable=false;
             }else{
                 avanti.interactable=true;
@@ -200,22 +210,103 @@ public class Script : MonoBehaviour
         }
     }
     
+    
     /// <summary>
-    /// This function is responsible for starting the AR plane detection and loading process.
+    /// This function loads all the "Unicorno Passi" game objects from the "Resources" folder,
+    /// adds them to the "passi" list, disables the "StartPanel", and enables the "LoadingPanel".
+    /// It then starts the "LoadingCoroutine" to simulate a loading process.
     /// </summary>
-    /// <remarks>
-    /// The function disables the "StartPanel" and enables the "LoadingPanel". It then starts the "LoadingCoroutine"
-    /// to simulate a loading process. After the loading process is completed, it enables AR plane detection,
-    /// and shows the "ConstructionPanel".
-    /// </remarks>
-    void StartDetection()
+    void Unicorno()
     {
+        // Load all "Unicorno Passi" game objects from the "Resources" folder
+        GameObject[] passiUnicorno = Resources.LoadAll<GameObject>("Unicorno Passi");
+
+        // Ordina l'array per nome
+        passiUnicorno = passiUnicorno
+            .OrderBy(prefab => ExtractNumber(prefab.name))
+            .ToArray();
+
+        // Add the loaded game objects to the "passi" list
+        passi.AddRange(passiUnicorno);
+
         // Disable the "StartPanel" and enable the "LoadingPanel"
         startPanel.SetActive(false);
         loadingPanel.SetActive(true);
 
         // Start the "LoadingCoroutine" to simulate a loading process
         StartCoroutine(LoadingCoroutine());
+    }
+
+    
+    
+    /// <summary>
+    /// This function loads all the "Cavalluccio Passi" game objects from the "Resources" folder,
+    /// adds them to the "passi" list, disables the "StartPanel", and enables the "LoadingPanel".
+    /// It then starts the "LoadingCoroutine" to simulate a loading process.
+    /// </summary>
+    void Cavalluccio()
+    {
+        // Load all "Cavalluccio Passi" game objects from the "Resources" folder
+        GameObject[] passiCavalluccio = Resources.LoadAll<GameObject>("Cavalluccio Passi");
+
+        // Ordina l'array per nome
+        passiCavalluccio = passiCavalluccio
+            .OrderBy(prefab => ExtractNumber(prefab.name))
+            .ToArray();
+
+        // Add the loaded game objects to the "passi" list
+        passi.AddRange(passiCavalluccio);
+
+        // Disable the "StartPanel" and enable the "LoadingPanel"
+        startPanel.SetActive(false);
+        loadingPanel.SetActive(true);
+
+        // Start the "LoadingCoroutine" to simulate a loading process
+        StartCoroutine(LoadingCoroutine());
+    }
+
+
+    
+    /// <summary>
+    /// This function loads all the "Anatra Passi" game objects from the "Resources" folder,
+    /// adds them to the "passi" list, disables the "StartPanel", and enables the "LoadingPanel".
+    /// It then starts the "LoadingCoroutine" to simulate a loading process.
+    /// </summary>
+    void Anatra()
+    {
+        // Load all "Anatra Passi" game objects from the "Resources" folder
+        GameObject[] passiAnatra = Resources.LoadAll<GameObject>("Anatra Passi");
+
+        // Ordina l'array per nome
+        passiAnatra = passiAnatra
+            .OrderBy(prefab => ExtractNumber(prefab.name))
+            .ToArray();
+
+        // Add the loaded game objects to the "passi" list
+        passi.AddRange(passiAnatra);
+
+        // Disable the "StartPanel" and enable the "LoadingPanel"
+        startPanel.SetActive(false);
+        loadingPanel.SetActive(true);
+
+        // Start the "LoadingCoroutine" to simulate a loading process
+        StartCoroutine(LoadingCoroutine());
+    }
+
+     
+    /// <summary>
+    /// This function extracts the first number found in a given string using regular expressions.
+    /// </summary>
+    /// <param name="name">The string from which to extract the number.</param>
+    /// <returns>The first number found in the string, or 0 if no number is found.</returns>
+    private int ExtractNumber(string name)
+    {
+        // Use regular expressions to find the first number in the string
+        Match match = Regex.Match(name, @"\d+");
+
+        // If a number is found, parse it and return it
+        // Otherwise, return 0
+        return match.Success ? int.Parse(match.Value) : 0;
     }
 
     /// <summary>
