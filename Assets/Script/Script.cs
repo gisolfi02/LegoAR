@@ -24,13 +24,15 @@ public class Script : MonoBehaviour
     
     //Costruzione
     private List<GameObject> passi = new List<GameObject>(); // Prefab dell'oggetto da posizionare
+    private List<GameObject> infoPassi = new List<GameObject>();
     private bool piazzato = false; 
     private Pose pose; //Posizione del tocco dell'utente
     private int passo = 0;
     private GameObject passoCorrente;
+    private GameObject infoPassoCorrente;
     private int temp;
     //UI
-    private Button avanti,indietro,unicorno,cavalluccio,anatra,home,annulla, conferma;
+    private Button avanti,indietro,unicorno,cavalluccio,anatra,home,annulla, conferma,info;
     private GameObject startPanel, constructionPanel,loadingPanel, confermaPanel;
     private Slider progressBar;
 
@@ -77,6 +79,11 @@ public class Script : MonoBehaviour
         annulla = GameObject.FindGameObjectWithTag("Annulla").GetComponent<Button>();
         annulla.onClick.AddListener(Annulla);
 
+        // Set up the "info" button
+        info = GameObject.FindGameObjectWithTag("Info").GetComponent<Button>();
+        info.onClick.AddListener(Info);
+        info.gameObject.SetActive(false);
+
         // Set up the "progressBar" slider
         progressBar = GameObject.FindGameObjectWithTag("ProgressBar").GetComponent<Slider>();
         progressBar.value = 0f;
@@ -104,111 +111,180 @@ public class Script : MonoBehaviour
 
 
     /// <summary>
-    /// This function is responsible for handling the game logic during the AR application's update phase.
-    /// It checks for user touch input, performs raycasting to detect planes, and updates the UI elements based on the current step.
+    /// Handles the AR application's game logic during the Update phase.
+    /// This function processes user touch input, performs raycasting to detect planes, 
+    /// and updates the UI and AR elements depending on the application's state and progress.
     /// </summary>
     void Update()
     {
-        if(piazzato == false){
-        // Controlla se l'utente ha toccato lo schermo
+        // Check if the object has not been placed yet
+        if (piazzato == false)
+        {
+            // Check if there is at least one touch on the screen
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
 
-                // Esegui un raycast solo quando l'utente tocca lo schermo
+                // Perform a raycast when the touch begins
                 if (touch.phase == TouchPhase.Began)
                 {
-                    // Lancia un raycast per trovare un piano
+                    // Check if the raycast hits a plane within a polygon
                     if (raycastManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
                     {
-                        // Ottieni la posizione del primo piano rilevato
+                        // Retrieve the pose (position and rotation) of the first detected plane
                         pose = hits[0].pose;
 
-                        passoCorrente = Instantiate(passi[passo],pose.position,pose.rotation);
-                        passo++; // Incrementa il passo per la prossima istanza di oggetto da posizionare
-                        piazzato = true; // Imposta la variabile per evitare ulteriori raycasts
-                        shadowPlane = Instantiate(shadowPlane, new UnityEngine.Vector3(pose.position.x,pose.position.y,pose.position.z), pose.rotation);
+                        // Instantiate the current step's AR object at the detected position and rotation
+                        passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
+
+                        // Mark the object as placed to avoid further raycasts
+                        piazzato = true;
+
+                        // Instantiate a shadow plane at the same position and rotation as the detected pose
+                        shadowPlane = Instantiate(shadowPlane, new UnityEngine.Vector3(pose.position.x, pose.position.y, pose.position.z), pose.rotation);
+
+                        // Instantiate the information object related to the current step slightly above the detected position
+                        infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(pose.position.x + 0.2f, pose.position.y + 0.3f, pose.position.z), pose.rotation);
+
+                        // Initially set the information object to inactive
+                        infoPassoCorrente.SetActive(false);
+
+                        // Activate navigation and UI elements
                         avanti.gameObject.SetActive(true);
                         indietro.gameObject.SetActive(true);
+                        info.gameObject.SetActive(true);
                         progressBar.gameObject.SetActive(true);
-                        progressBar.value = (float)1/passi.Count;
+
+                        // Set the progress bar value based on the current step's progress
+                        progressBar.value = (float)1 / passi.Count;
+
+                        // Increment the step for the next instantiation
+                        passo++;
                     }
                 }
             }
         }
-        else{
-            if(passo == 0 || passo == passi.Count - 1){
-                avanti.interactable=false;
-            }else{
-                avanti.interactable=true;
+        else
+        {
+            // Update UI element interactability based on the current step
+            if (passo == 0 || passo == passi.Count - 1)
+            {
+                avanti.interactable = false; // Disable forward navigation at the beginning or end
             }
+            else
+            {
+                avanti.interactable = true; // Enable forward navigation otherwise
+            }
+
             if (passo <= 1)
             {
-                indietro.interactable = false;
-            } else{
-                indietro.interactable = true;
+                indietro.interactable = false; // Disable backward navigation at the first step
+            }
+            else
+            {
+                indietro.interactable = true; // Enable backward navigation otherwise
             }
         }
     }
 
     /// <summary>
-    /// This function handles the logic for moving to the next step in the construction process.
+    /// Handles the game logic for advancing to the next step in the AR construction process.
     /// </summary>
     /// <remarks>
-    /// The function checks if the current step object exists, saves its position and rotation, and then destroys it.
-    /// It then checks if there is a next step in the list of prefabs. If so, it increments the step counter,
-    /// and instantiates the next step object at the same position as the previous one.
+    /// This function manages the transition from the current step to the next step in the sequence:
+    /// - It checks if the current step object (`passoCorrente`) exists.
+    /// - Saves the current object's position and rotation before destroying it.
+    /// - Checks if there is a subsequent step in the list of prefabs (`passi`).
+    /// - If a next step exists, increments the step counter (`passo`), instantiates the next step object
+    ///   at the same position and rotation as the previous one, and updates the progress bar accordingly.
     /// </remarks>
     void Avanti()
     {
+        // If there is a current step object, handle its cleanup
         if (passoCorrente != null)
         {
-            // Salva la posizione e la rotazione dell'oggetto corrente
+            // Save the position and rotation of the current step object
             pose.position = passoCorrente.transform.position;
             pose.rotation = passoCorrente.transform.rotation;
 
-            // Distruggi l'oggetto corrente
+            // Destroy the current step object
             Destroy(passoCorrente);
+
+            // Destroy the related information object
+            Destroy(infoPassoCorrente);
         }
 
-        // Controlla se esiste un altro passo
-        if (passi[passo+1] !=null){
-            // Incrementa il passo e posiziona il nuovo oggetto nella stessa posizione
+        // Check if there is a next step in the sequence
+        if (passi[passo + 1] != null)
+        {
+            // Increment the step counter
             passo++;
+
+            // Instantiate the next step object at the saved position and rotation
             passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
-            progressBar.value += (float)1/passi.Count;
+
+            // Instantiate the information object for the next step
+            infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(
+                pose.position.x + 0.2f, 
+                pose.position.y + 0.3f, 
+                pose.position.z), 
+                pose.rotation);
+
+            // Update the progress bar to reflect the new step
+            progressBar.value += (float)1 / passi.Count;
         }
     }
 
+
+
     /// <summary>
-    /// This function handles the logic for moving to the previous step in the construction process.
+    /// Handles the game logic for moving to the previous step in the AR construction process.
     /// </summary>
     /// <remarks>
-    /// The function checks if the current step object exists, saves its position and rotation, and then destroys it.
-    /// It then checks if there is a previous step in the list of prefabs. If so, it decrements the step counter,
-    /// and instantiates the previous step object at the same position as the current one.
+    /// This function manages the transition from the current step to the previous step in the sequence:
+    /// - It checks if the current step object (`passoCorrente`) exists.
+    /// - Saves the current object's position and rotation before destroying it.
+    /// - Checks if there is a previous step in the list of prefabs (`passi`).
+    /// - If a previous step exists, decrements the step counter (`passo`), instantiates the previous step object
+    ///   at the same position and rotation as the current one, and updates the progress bar accordingly.
     /// </remarks>
     void Indietro()
     {
         // Check if the current step object exists
         if (passoCorrente != null)
         {
-            // Save the position and rotation of the current object
+            // Save the position and rotation of the current step object
             pose.position = passoCorrente.transform.position;
             pose.rotation = passoCorrente.transform.rotation;
 
-            // Destroy the current object
+            // Destroy the current step object
             Destroy(passoCorrente);
+
+            // Destroy the related information object
+            Destroy(infoPassoCorrente);
         }
 
-        // Check if there is a previous step
-        if (passi[passo-1] !=null){
-            // Decrement the step counter and instantiate the previous step object at the same position
+        // Check if there is a previous step in the sequence
+        if (passi[passo - 1] != null)
+        {
+            // Decrement the step counter
             passo--;
+
+            // Instantiate the previous step object at the saved position and rotation
             passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
-            progressBar.value -= (float)1/passi.Count;
+
+            // Instantiate the information object for the previous step
+            infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(
+                pose.position.x + 0.2f,
+                pose.position.y + 0.3f,
+                pose.position.z),
+                pose.rotation);
+
+            // Update the progress bar to reflect the new step
+            progressBar.value -= (float)1 / passi.Count;
         }
     }
+
     
     
     /// <summary>
@@ -240,33 +316,46 @@ public class Script : MonoBehaviour
     
     
     /// <summary>
-    /// This function loads all the "Cavalluccio Passi" game objects from the "Resources" folder,
-    /// adds them to the "passi" list, disables the "StartPanel", and enables the "LoadingPanel".
-    /// It then starts the "LoadingCoroutine" to simulate a loading process.
+    /// Loads all "Cavalluccio Passi" and "Cavalluccio Info" game objects from the "Resources" folder.
+    /// Adds the loaded objects to their respective lists, disables the "StartPanel," and enables the "LoadingPanel."
+    /// Finally, initiates a coroutine to simulate the loading process.
     /// </summary>
     void Cavalluccio()
     {
         // Load all "Cavalluccio Passi" game objects from the "Resources" folder
         GameObject[] passiCavalluccio = Resources.LoadAll<GameObject>("Cavalluccio Passi");
 
-        // Ordina l'array per nome
+        // Order the array by numeric value extracted from their names
         passiCavalluccio = passiCavalluccio
             .OrderBy(prefab => ExtractNumber(prefab.name))
             .ToArray();
 
-        // Add the loaded game objects to the "passi" list
+        // Add the ordered "Cavalluccio Passi" game objects to the "passi" list
         passi.AddRange(passiCavalluccio);
 
-        // Disable the "StartPanel" and enable the "LoadingPanel"
+        // Load all "Cavalluccio Info" game objects from the "Resources" folder
+        GameObject[] infoPassiCavalluccio = Resources.LoadAll<GameObject>("Cavalluccio Info");
+
+        // Order the array by numeric value extracted from their names
+        infoPassiCavalluccio = infoPassiCavalluccio
+            .OrderBy(prefab => ExtractNumber(prefab.name))
+            .ToArray();
+
+        // Add the ordered "Cavalluccio Info" game objects to the "infoPassi" list
+        infoPassi.AddRange(infoPassiCavalluccio);
+
+        // Disable the "StartPanel" to hide the starting UI
         startPanel.SetActive(false);
+
+        // Enable the "LoadingPanel" to show a loading process
         loadingPanel.SetActive(true);
 
-        // Start the "LoadingCoroutine" to simulate a loading process
+        // Start the loading coroutine to simulate the loading process
         StartCoroutine(LoadingCoroutine());
     }
 
 
-    
+
     /// <summary>
     /// This function loads all the "Anatra Passi" game objects from the "Resources" folder,
     /// adds them to the "passi" list, disables the "StartPanel", and enables the "LoadingPanel".
@@ -397,6 +486,28 @@ public class Script : MonoBehaviour
         confermaPanel.SetActive(false);
     }
 
-    
+    /// <summary>
+    /// Toggles the display of information related to the current step.
+    /// </summary>
+    /// <remarks>
+    /// The function checks the current state of the <see cref="infoPassoCorrente"/> game object:
+    /// - If the object is inactive, it activates it to display the associated information.
+    /// - If the object is active, it deactivates it to hide the information.
+    /// </remarks>
+    void Info()
+    {
+        // Check if the current information object is inactive
+        if (infoPassoCorrente.activeSelf == false)
+        {
+            // Activate the information object to display its contents
+            infoPassoCorrente.SetActive(true);
+        }
+        else
+        {
+            // Deactivate the information object to hide its contents
+            infoPassoCorrente.SetActive(false);
+        }
+    }
+
 }
 
