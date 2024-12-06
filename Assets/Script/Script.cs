@@ -31,6 +31,8 @@ public class Script : MonoBehaviour
     private GameObject passoCorrente;
     private GameObject infoPassoCorrente;
     private int temp;
+    private Transform cameraTransform;
+
     //UI
     private Button avanti,indietro,unicorno,cavalluccio,anatra,home,annulla, conferma,info;
     private GameObject startPanel, constructionPanel,loadingPanel, confermaPanel;
@@ -107,6 +109,9 @@ public class Script : MonoBehaviour
 
         // Disable AR plane detection
         planeManager.enabled = false;
+
+        // Get the camera's transform
+        cameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
 
 
@@ -144,7 +149,9 @@ public class Script : MonoBehaviour
                         shadowPlane = Instantiate(shadowPlane, new UnityEngine.Vector3(pose.position.x, pose.position.y, pose.position.z), pose.rotation);
 
                         // Instantiate the information object related to the current step slightly above the detected position
-                        infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(pose.position.x + 0.2f, pose.position.y + 0.3f, pose.position.z), pose.rotation);
+                        infoPassoCorrente = Instantiate(infoPassi[passo], 
+                            new UnityEngine.Vector3(pose.position.x + 0.4f, pose.position.y + 0.3f, pose.position.z), 
+                            Quaternion.Euler(0,180,0));
 
                         // Initially set the information object to inactive
                         infoPassoCorrente.SetActive(false);
@@ -157,9 +164,6 @@ public class Script : MonoBehaviour
 
                         // Set the progress bar value based on the current step's progress
                         progressBar.value = (float)1 / passi.Count;
-
-                        // Increment the step for the next instantiation
-                        passo++;
                     }
                 }
             }
@@ -167,7 +171,7 @@ public class Script : MonoBehaviour
         else
         {
             // Update UI element interactability based on the current step
-            if (passo == 0 || passo == passi.Count - 1)
+            if (passo < 0 || passo == passi.Count - 1)
             {
                 avanti.interactable = false; // Disable forward navigation at the beginning or end
             }
@@ -176,7 +180,7 @@ public class Script : MonoBehaviour
                 avanti.interactable = true; // Enable forward navigation otherwise
             }
 
-            if (passo <= 1)
+            if (passo < 1)
             {
                 indietro.interactable = false; // Disable backward navigation at the first step
             }
@@ -184,6 +188,8 @@ public class Script : MonoBehaviour
             {
                 indietro.interactable = true; // Enable backward navigation otherwise
             }
+
+            infoPassoCorrente.transform.LookAt(cameraTransform, Vector3.up);
         }
     }
 
@@ -225,10 +231,10 @@ public class Script : MonoBehaviour
 
             // Instantiate the information object for the next step
             infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(
-                pose.position.x + 0.2f, 
-                pose.position.y + 0.3f, 
+                pose.position.x + 0.4f, 
+                pose.position.y + 0.3f,
                 pose.position.z), 
-                pose.rotation);
+                Quaternion.Euler(0,180,0));;
 
             // Update the progress bar to reflect the new step
             progressBar.value += (float)1 / passi.Count;
@@ -275,44 +281,55 @@ public class Script : MonoBehaviour
 
             // Instantiate the information object for the previous step
             infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(
-                pose.position.x + 0.2f,
+                pose.position.x + 0.4f, 
                 pose.position.y + 0.3f,
-                pose.position.z),
-                pose.rotation);
+                pose.position.z), 
+                Quaternion.Euler(0,180,0));
 
             // Update the progress bar to reflect the new step
             progressBar.value -= (float)1 / passi.Count;
         }
     }
 
-    
-    
+
+
     /// <summary>
-    /// This function loads all the "Unicorno Passi" game objects from the "Resources" folder,
-    /// adds them to the "passi" list, disables the "StartPanel", and enables the "LoadingPanel".
-    /// It then starts the "LoadingCoroutine" to simulate a loading process.
+    /// Loads the game objects associated with "Unicorno Passi" and "Unicorno Info" from the "Resources" folder,
+    /// orders them by the numeric value extracted from their names, and adds them to the respective lists.
+    /// Disables the "StartPanel", enables the "LoadingPanel", and starts a coroutine to simulate a loading process.
     /// </summary>
     void Unicorno()
     {
-        // Load all "Unicorno Passi" game objects from the "Resources" folder
+        // Load all "Unicorno Passi" game objects from the "Resources" folder.
         GameObject[] passiUnicorno = Resources.LoadAll<GameObject>("Unicorno Passi");
 
-        // Ordina l'array per nome
+        // Order the loaded array by numeric values extracted from their names using the 'ExtractNumber' function.
         passiUnicorno = passiUnicorno
             .OrderBy(prefab => ExtractNumber(prefab.name))
             .ToArray();
 
-        // Add the loaded game objects to the "passi" list
+        // Add the ordered "Unicorno Passi" game objects to the "passi" list.
         passi.AddRange(passiUnicorno);
 
-        // Disable the "StartPanel" and enable the "LoadingPanel"
+        // Load all "Unicorno Info" game objects from the "Resources" folder.
+        GameObject[] infoPassiUnicorno = Resources.LoadAll<GameObject>("Unicorno Info");
+
+        // Order the loaded array by numeric values extracted from their names using the 'ExtractNumber' function.
+        infoPassiUnicorno = infoPassiUnicorno
+            .OrderBy(prefab => ExtractNumber(prefab.name))
+            .ToArray();
+
+        // Add the ordered "Unicorno Info" game objects to the "infoPassi" list.
+        infoPassi.AddRange(infoPassiUnicorno);
+
+        // Deactivate the "StartPanel" and activate the "LoadingPanel" to indicate loading is in progress.
         startPanel.SetActive(false);
         loadingPanel.SetActive(true);
 
-        // Start the "LoadingCoroutine" to simulate a loading process
+        // Start the "LoadingCoroutine" to simulate a loading process (could include visual effects or delays).
         StartCoroutine(LoadingCoroutine());
     }
-
+    
     
     
     /// <summary>
