@@ -2948,6 +2948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shadowPlane: {fileID: 3530017187618483329, guid: 5f2a4d141c07623428690ea8ab3a74c7,
     type: 3}
+  rotationSpeed: 5
 --- !u!1 &1595809877
 GameObject:
   m_ObjectHideFlags: 0

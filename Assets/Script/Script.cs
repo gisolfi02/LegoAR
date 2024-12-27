@@ -32,6 +32,10 @@ public class Script : MonoBehaviour
     private GameObject infoPassoCorrente;
     private int temp;
     private Transform cameraTransform;
+    private Vector2 lastTouchPosition; // Posizione precedente del tocco
+    private bool isTouching = false;   // Indica se lo schermo è attualmente toccato
+    public float rotationSpeed = 5f;  // Velocità di rotazione
+
 
     //UI
     private Button avanti,indietro,unicorno,cavalluccio,anatra,home,annulla, conferma,info;
@@ -149,9 +153,11 @@ public class Script : MonoBehaviour
                         shadowPlane = Instantiate(shadowPlane, new UnityEngine.Vector3(pose.position.x, pose.position.y, pose.position.z), pose.rotation);
 
                         // Instantiate the information object related to the current step slightly above the detected position
-                        infoPassoCorrente = Instantiate(infoPassi[passo], 
-                            new UnityEngine.Vector3(pose.position.x + 0.4f, pose.position.y + 0.3f, pose.position.z), 
-                            Quaternion.Euler(0,180,0));
+                        infoPassoCorrente = Instantiate(
+                            infoPassi[passo],
+                            new Vector3(pose.position.x + 0.4f, pose.position.y + 0.3f, pose.position.z),
+                            Quaternion.LookRotation(Camera.main.transform.forward) * Quaternion.Euler(0, 180, 0)
+                        );
 
                         // Initially set the information object to inactive
                         infoPassoCorrente.SetActive(false);
@@ -170,6 +176,36 @@ public class Script : MonoBehaviour
         }
         else
         {
+            // Aggiorna la rotazione tramite scorrimento sullo schermo
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    // Inizia il tocco
+                    isTouching = true;
+                    lastTouchPosition = touch.position;
+                }
+                else if (touch.phase == TouchPhase.Moved && isTouching)
+                {
+                    // Calcola il delta del tocco
+                    Vector2 touchDelta = touch.position - lastTouchPosition;
+
+                    // Ruota l'oggetto sull'asse Y
+                    float rotationAmount = touchDelta.x * rotationSpeed * Time.deltaTime;
+                    passoCorrente.transform.Rotate(0, -rotationAmount, 0);
+
+                    // Aggiorna la posizione precedente del tocco
+                    lastTouchPosition = touch.position;
+                }
+                else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                {
+                    // Fine del tocco
+                    isTouching = false;
+                }
+            }
+            
             // Update UI element interactability based on the current step
             if (passo < 0 || passo == passi.Count - 1)
             {
@@ -206,13 +242,14 @@ public class Script : MonoBehaviour
     /// </remarks>
     void Avanti()
     {
+        bool active = false;
         // If there is a current step object, handle its cleanup
         if (passoCorrente != null)
         {
             // Save the position and rotation of the current step object
             pose.position = passoCorrente.transform.position;
             pose.rotation = passoCorrente.transform.rotation;
-
+            active = infoPassoCorrente.activeSelf;
             // Destroy the current step object
             Destroy(passoCorrente);
 
@@ -230,12 +267,12 @@ public class Script : MonoBehaviour
             passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
 
             // Instantiate the information object for the next step
-            infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(
-                pose.position.x + 0.4f, 
-                pose.position.y + 0.3f,
-                pose.position.z), 
-                Quaternion.Euler(0,180,0));;
-
+            infoPassoCorrente = Instantiate(
+                infoPassi[passo],
+                new Vector3(pose.position.x + 0.4f, pose.position.y + 0.3f, pose.position.z),
+                Quaternion.LookRotation(Camera.main.transform.forward) * Quaternion.Euler(0, 180, 0)
+            );
+            infoPassoCorrente.SetActive(active);
             // Update the progress bar to reflect the new step
             progressBar.value += (float)1 / passi.Count;
         }
@@ -256,12 +293,14 @@ public class Script : MonoBehaviour
     /// </remarks>
     void Indietro()
     {
+        bool active = false;
         // Check if the current step object exists
         if (passoCorrente != null)
         {
             // Save the position and rotation of the current step object
             pose.position = passoCorrente.transform.position;
             pose.rotation = passoCorrente.transform.rotation;
+            active = infoPassoCorrente.activeSelf;
 
             // Destroy the current step object
             Destroy(passoCorrente);
@@ -280,12 +319,12 @@ public class Script : MonoBehaviour
             passoCorrente = Instantiate(passi[passo], pose.position, pose.rotation);
 
             // Instantiate the information object for the previous step
-            infoPassoCorrente = Instantiate(infoPassi[passo], new UnityEngine.Vector3(
-                pose.position.x + 0.4f, 
-                pose.position.y + 0.3f,
-                pose.position.z), 
-                Quaternion.Euler(0,180,0));
-
+            infoPassoCorrente = Instantiate(
+                infoPassi[passo],
+                new Vector3(pose.position.x + 0.4f, pose.position.y + 0.3f, pose.position.z),
+                Quaternion.LookRotation(Camera.main.transform.forward) * Quaternion.Euler(0, 180, 0)
+            );
+            infoPassoCorrente.SetActive(active);
             // Update the progress bar to reflect the new step
             progressBar.value -= (float)1 / passi.Count;
         }
@@ -374,25 +413,38 @@ public class Script : MonoBehaviour
 
 
     /// <summary>
-    /// This function loads all the "Anatra Passi" game objects from the "Resources" folder,
-    /// adds them to the "passi" list, disables the "StartPanel", and enables the "LoadingPanel".
-    /// It then starts the "LoadingCoroutine" to simulate a loading process.
+    /// This function loads all "Anatra Passi" game objects from the "Resources" folder,
+    /// adds them to the "passi" list, disables the "StartPanel," and enables the "LoadingPanel."
+    /// It then starts the "LoadingCoroutine" to simulate the loading process.
     /// </summary>
     void Anatra()
     {
         // Load all "Anatra Passi" game objects from the "Resources" folder
         GameObject[] passiAnatra = Resources.LoadAll<GameObject>("Anatra Passi");
 
-        // Ordina l'array per nome
+        // Order the array by numeric value extracted from their names
         passiAnatra = passiAnatra
             .OrderBy(prefab => ExtractNumber(prefab.name))
             .ToArray();
 
-        // Add the loaded game objects to the "passi" list
+        // Add the ordered "Anatra Passi" game objects to the "passi" list
         passi.AddRange(passiAnatra);
 
-        // Disable the "StartPanel" and enable the "LoadingPanel"
+        // Load all "Anatra Info" game objects from the "Resources" folder
+        GameObject[] infoPassiAnatra = Resources.LoadAll<GameObject>("Anatra Info");
+
+        // Order the array by numeric value extracted from their names
+        infoPassiAnatra = infoPassiAnatra
+            .OrderBy(prefab => ExtractNumber(prefab.name))
+            .ToArray();
+
+        // Add the ordered "Anatra Info" game objects to the "infoPassi" list
+        infoPassi.AddRange(infoPassiAnatra);
+
+        // Disable the "StartPanel" to hide the starting UI
         startPanel.SetActive(false);
+
+        // Enable the "LoadingPanel" to show a loading process
         loadingPanel.SetActive(true);
 
         // Start the "LoadingCoroutine" to simulate a loading process
