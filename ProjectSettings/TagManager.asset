@@ -19,7 +19,7 @@ TagManager:
   - Cavalluccio
   - Anatra
   - Info
-  - Percentuale
+  - percentuale
   layers:
   - Default
   - TransparentFX

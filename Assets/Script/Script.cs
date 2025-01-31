@@ -41,6 +41,7 @@ public class Script : MonoBehaviour
     private Button avanti,indietro,unicorno,cavalluccio,anatra,home,annulla, conferma,info;
     private GameObject startPanel, constructionPanel,loadingPanel, confermaPanel;
     private Slider progressBar;
+    private TMP_Text percentuale;
 
     /// <summary>
     /// This function initializes the AR application and sets up the user interface.
@@ -50,6 +51,11 @@ public class Script : MonoBehaviour
         // Get the ARRaycastManager component
         raycastManager = GetComponent<ARRaycastManager>();
         planeManager = GetComponent<ARPlaneManager>();
+
+        // Set up the "percentuale" text 
+        percentuale = GameObject.FindGameObjectWithTag("percentuale").GetComponent<TMP_Text>();
+        percentuale.SetText("0%");
+        percentuale.gameObject.SetActive(false);
 
         // Set up the "Avanti" button
         avanti = GameObject.FindGameObjectWithTag("Avanti").GetComponent<Button>();
@@ -167,10 +173,11 @@ public class Script : MonoBehaviour
                         indietro.gameObject.SetActive(true);
                         info.gameObject.SetActive(true);
                         progressBar.gameObject.SetActive(true);
+                        percentuale.gameObject.SetActive(true);
 
                         // Set the progress bar value based on the current step's progress
                         progressBar.value = (float)1 / passi.Count;
-                    }
+                        AggiornaPercentuale();                    }
                 }
             }
         }
@@ -275,6 +282,7 @@ public class Script : MonoBehaviour
             infoPassoCorrente.SetActive(active);
             // Update the progress bar to reflect the new step
             progressBar.value += (float)1 / passi.Count;
+            AggiornaPercentuale();
         }
     }
 
@@ -327,10 +335,16 @@ public class Script : MonoBehaviour
             infoPassoCorrente.SetActive(active);
             // Update the progress bar to reflect the new step
             progressBar.value -= (float)1 / passi.Count;
+            AggiornaPercentuale();
         }
     }
 
 
+    void AggiornaPercentuale()
+{
+    float percentage = progressBar.value * 100;
+    percentuale.SetText(percentage.ToString("F0") + "%"); // Mostra la percentuale senza decimali
+}
 
     /// <summary>
     /// Loads the game objects associated with "Unicorno Passi" and "Unicorno Info" from the "Resources" folder,
