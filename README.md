@@ -47,8 +47,6 @@ git clone https://github.com/gisolfi02/LegoAR.git
 ### 4️⃣ Configurare i Player Settings
 - Vai su **Edit > Project Settings > XR Plug-in Management**
 - Abilita **ARCore** per Android
-- **Imposta l’architettura su ARM64** (per Android)
-- **Abilita il permission handling** per fotocamera e AR
 
 ---
 
@@ -89,7 +87,7 @@ git clone https://github.com/gisolfi02/LegoAR.git
 1. **Abilita la modalità Developer** sul dispositivo
 2. **Collega il dispositivo via USB**
 3. **In Unity**, vai su **File > Build Settings**
-4. Seleziona **Android** e imposta il formato di build su **IL2CPP**
+4. Seleziona **Android**
 5. Clicca su **Build & Run**
 
 ## ⚠️ Compatibilità
