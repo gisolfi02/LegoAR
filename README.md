@@ -1,6 +1,6 @@
 # 📌 Lego AR
 <p align="center">
-  <img src="https://github.com/gisolfi02/LegoAR/blob/master/Assets/Logo.png" style="width:300px">
+  <img src="https://github.com/gisolfi02/LegoAR/blob/master/Assets/Images/Logo.png" style="width:300px">
 </p>
 
 ---
