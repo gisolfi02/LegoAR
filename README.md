@@ -59,6 +59,7 @@ git clone https://github.com/gisolfi02/LegoAR.git
   📁 Bricks/               # Modelli e risorse relative ai mattoncini LEGO
   📁 Cavalluccio FBX/      # Modelli 3D in formato FBX relativi al cavalluccio
   📁 Cavalluccio Info/     # Informazioni sui passi del cavalluccio
+  📁 Images/               # Immagini utilizzate per la UI
   📁 Material/             # Materiali e shader utilizzati nel progetto
   📁 ProjectFiles/         # File di progetto aggiuntivi
   📁 Resources/            # Risorse generali accessibili in fase di runtime
