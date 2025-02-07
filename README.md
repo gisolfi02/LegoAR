@@ -23,7 +23,7 @@ Questa esperienza unisce la creatività del mondo LEGO con le potenzialità dell
 
 ## 💻 Requisiti di Sistema
 - **Dispositivi Mobile Supportati**:
-  - Android (`Android 8.0+`, con supporto **ARCore** e **ArCore Depth API**)
+  - Android (`Android 8.0+`, con supporto **ARCore** e **ARCore Depth API**)
 
 
 ---
