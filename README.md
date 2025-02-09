@@ -3,16 +3,13 @@
   <img src="https://github.com/gisolfi02/LegoAR/blob/master/Assets/Images/Logo.png" style="width:300px">
 </p>
 
----
+**LegoAR** is an application developed in **Unity** with the support of **AR Foundation**, designed to bring the LEGO brick experience into augmented reality (AR). The app allows users to place digital LEGO models in the real world, interact with them, and visualize them in a three-dimensional space using compatible devices.
 
-## 📝 Descrizione
-**LegoAR** è un'applicazione sviluppata in **Unity** con il supporto di **AR Foundation**, progettata per portare l'esperienza dei mattoncini LEGO nella realtà aumentata (AR). L'app consente agli utenti di posizionare modelli LEGO digitali nel mondo reale, interagire con essi e visualizzarli in uno spazio tridimensionale utilizzando dispositivi compatibili.
-
-Questa esperienza unisce la creatività del mondo LEGO con le potenzialità della tecnologia AR, offrendo un modo innovativo di costruire e visualizzare strutture LEGO senza la necessità di pezzi fisici.
+This experience combines the creativity of the LEGO world with the potential of AR technology, offering an innovative way to build and visualize LEGO structures without the need for physical pieces.
 
 ---
 
-## 🛠 Tecnologie Utilizzate
+## 🛠 Technologies Used
 - **Unity** (`2022.3.51f1 LTS`)
 - **AR Foundation** (`5.1.5`)
 - **ARCore XR Plugin** (`5.1.5`)
@@ -21,87 +18,84 @@ Questa esperienza unisce la creatività del mondo LEGO con le potenzialità dell
 
 ---
 
-## 💻 Requisiti di Sistema
-- **Dispositivi Mobile Supportati**:
-  - Android (`Android 8.0+`, con supporto **ARCore** e **ARCore Depth API**)
-
+## 💻 System Requirements
+- **Supported Mobile Devices**:
+  - Android (`Android 8.0+`, with support for **ARCore** and **ARCore Depth API**)
 
 ---
 
-## 🚀 Setup del Progetto
-### 1️⃣ Clonare il repository
+## 🚀 Project Setup
+### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/gisolfi02/LegoAR.git
 ```
-### 2️⃣ Aprire il progetto in Unity
-1. Apri Unity Hub
-2. Seleziona **Open Project**
-3. Naviga alla cartella del progetto e aprilo
+### 2️⃣ Open the Project in Unity
+1. Open Unity Hub
+2. Select **Open Project**
+3. Navigate to the project folder and open it
 
-### 3️⃣ Installare i pacchetti richiesti
+### 3️⃣ Install Required Packages
 - **AR Foundation**
 - **ARCore XR Plugin**
 - **XR Interaction Toolkit**
 - **URP (Universal Render Pipeline)**
 
-### 4️⃣ Configurare i Player Settings
-- Vai su **Edit > Project Settings > XR Plug-in Management**
-- Abilita **ARCore** per Android
+### 4️⃣ Configure Player Settings
+- Go to **Edit > Project Settings > XR Plug-in Management**
+- Enable **ARCore** for Android
 
 ---
 
-## 📂 Struttura della Cartella
+## 📂 Folder Structure
 ```
 📁 Assets/
-  📁 Anatra FBX/           # Modelli 3D in formato FBX relativi all'anatra
-  📁 Anatra Info/          # Informazioni sui passi dell'anatra
-  📁 Animazioni/           # Animazioni utilizzate nel progetto
-  📁 Bricks/               # Modelli e risorse relative ai mattoncini LEGO
-  📁 Cavalluccio FBX/      # Modelli 3D in formato FBX relativi al cavalluccio
-  📁 Cavalluccio Info/     # Informazioni sui passi del cavalluccio
-  📁 Images/               # Immagini utilizzate per la UI
-  📁 Material/             # Materiali e shader utilizzati nel progetto
-  📁 ProjectFiles/         # File di progetto aggiuntivi
-  📁 Resources/            # Risorse generali accessibili in fase di runtime
-  📁 Scenes/               # Scene di Unity del progetto
-  📁 Script/               # Script C# utilizzati per la logica dell'applicazione
-  📁 Shadow/               # Risorse relative alle ombre o effetti visivi
-  📁 Unicorno FBX/         # Modelli 3D in formato FBX relativi all'unicorno
-  📁 Unicorno Info/        # Informazioni sui passi dell'unicorno
-  📁 Violet Theme Ui/      # Risorse per il tema grafico dell'interfaccia utente
-📁 Packages/             # Pacchetti Unity
-📁 ProjectSettings/      # Configurazioni del progetto
+  📁 Anatra FBX/           # 3D models in FBX format related to the duck
+  📁 Anatra Info/          # Information about the duck's steps
+  📁 Animations/           # Animations used in the project
+  📁 Bricks/               # LEGO brick-related models and assets
+  📁 Cavalluccio FBX/      # 3D models in FBX format related to the seahorse
+  📁 Cavalluccio Info/     # Information about the seahorse's steps
+  📁 Images/               # Images used for the UI
+  📁 Material/             # Materials and shaders used in the project
+  📁 ProjectFiles/         # Additional project files
+  📁 Resources/            # General resources accessible at runtime
+  📁 Scenes/               # Unity project scenes
+  📁 Script/               # C# scripts for application logic
+  📁 Shadow/               # Resources related to shadows or visual effects
+  📁 Unicorno FBX/         # 3D models in FBX format related to the unicorn
+  📁 Unicorno Info/        # Information about the unicorn's steps
+  📁 Violet Theme UI/      # Resources for the UI theme
+📁 Packages/             # Unity packages
+📁 ProjectSettings/      # Project configurations
 ```
 
 ---
 
-## 🔹 Funzionalità Principali
-- 🌐 **Rilevamento e tracciamento della superficie:** L’applicazione utilizza la tecnologia di *AR Foundation* per rilevare le superfici piane su cui sarà possibile visualizzare la costruzione del modello durante tutto il processo di montaggio;
-- 🧩 **Guida interattiva:** Per ciascun passaggio, i vari pezzi vengono visualizzati in AR, posizionandoli virutalmente nella posizione corretta  
-- ➡️ **Navigazione tra i passaggi:** L’utente può navigare tra i passaggi utilizzando pulsanti, per viualizzare i passi precedenti o successivi;  
-- 📱 **Interfaccia utente intuitiva:** L’interfaccia include un pannello che mostra le descrizioni di ogni passaggio, indicando il numero e il tipo di pezzi richiesti. Inoltre prevede una barra di avanzamento per monitorare i progressi del montaggio; 
+## 🔹 Main Features
+- 🌐 **Surface Detection and Tracking:** The app uses *AR Foundation* technology to detect flat surfaces where users can visualize the model construction process;
+- 🧩 **Interactive Guide:** For each step, various pieces are displayed in AR, virtually positioning them correctly;
+- ➡️ **Step Navigation:** Users can navigate through the steps using buttons to view previous or next steps;
+- 📱 **Intuitive User Interface:** The interface includes a panel showing step descriptions, indicating the number and type of required pieces. Additionally, a progress bar monitors the assembly progress.
 
 ---
 
-## 📦 Build e Deploy
+## 📦 Build and Deploy
 ### 📱 Android
-1. **Abilita la modalità Developer** sul dispositivo
-2. **Collega il dispositivo via USB**
-3. **In Unity**, vai su **File > Build Settings**
-4. Seleziona **Android**
-5. Clicca su **Build & Run**
+1. **Enable Developer Mode** on your device
+2. **Connect the device via USB**
+3. **In Unity**, go to **File > Build Settings**
+4. Select **Android**
+5. Click **Build & Run**
 
-## ⚠️ Compatibilità
-L'app attualmente supporta **esclusivamente** il set LEGO® **31140** [*Unicorno Magico*](https://www.lego.com/it-it/product/magical-unicorn-31140). Assicurati di avere questo set prima di iniziare ad usarla.
+## ⚠️ Compatibility
+The app currently supports **only** the LEGO® **31140** [*Magical Unicorn*](https://www.lego.com/it-it/product/magical-unicorn-31140) set. Ensure you have this set before using the app.
 
 ---
 
 > **Disclaimer:**  
-> Questo progetto non è affiliato, sponsorizzato o approvato ufficialmente da LEGO®.  
-> LEGO® è un marchio registrato di proprietà del Gruppo LEGO.  
-> **LegoAR** è un progetto indipendente creato per migliorare l'esperienza di montaggio dei set LEGO®.  
-> Tutti i diritti sui marchi e sui nomi sono di proprietà dei rispettivi titolari.
+> This project is not affiliated, sponsored, or officially approved by LEGO®.  
+> LEGO® is a registered trademark owned by the LEGO Group.  
+> **LegoAR** is an independent project created to enhance the assembly experience of LEGO® sets.  
+> All trademarks and names are the property of their respective owners.
 
 ---
-
-
