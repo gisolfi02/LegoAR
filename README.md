@@ -3,9 +3,16 @@
   <img src="https://github.com/gisolfi02/LegoAR/blob/master/Assets/Images/Logo.png" style="width:300px">
 </p>
 
-**LegoAR** is an application developed in **Unity** with the support of **AR Foundation**, designed to bring the LEGO brick experience into augmented reality (AR). The app allows users to place digital LEGO models in the real world, interact with them, and visualize them in a three-dimensional space using compatible devices.
+**LegoAR** is an application developed during the **Information Visualization** course taught by **Prof. Andrea Francesco Abate** at the University of Salerno. The application is developed in **Unity** with the support of **AR Foundation**, designed to bring the LEGO brick experience into augmented reality (AR). The app allows users to place digital LEGO models in the real world, interact with them, and visualize them in a three-dimensional space using compatible devices.
 
 This experience combines the creativity of the LEGO world with the potential of AR technology, offering an innovative way to build and visualize LEGO structures without the need for physical pieces.
+
+---
+
+## 👥 **Who We Are**  
+- [@gisolfi02](https://github.com/gisolfi02)  
+- [@svalent3](https://github.com/svalent3)
+- [@zzzzilv](https://github.com/zzzzilv)
 
 ---
 
